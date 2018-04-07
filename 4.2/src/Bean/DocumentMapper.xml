@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- 接口插入 -->
+<mapper namespace="Dao.IDocDao">
+<!-- 	文档上传界面的数据库插入数据部分 -->
+	<insert id="addDoc" parameterType="Bean.Document" >
+		<selectKey keyProperty="d_id" order="BEFORE" resultType="java.lang.Integer">
+			select FOUR_DOCUMENTS_TB_seq.nextval from dual
+		</selectKey>
+		insert into FOUR_DOCUMENTS_TB values(
+		#{d_id},
+		#{d_name,jdbcType=VARCHAR},
+		#{d_type,jdbcType=VARCHAR},
+		#{d_avatarurl,jdbcType=VARCHAR},
+		#{d_date,jdbcType=VARCHAR},
+		#{d_up_userid,jdbcType=NUMERIC},
+		#{d_description,jdbcType=VARCHAR},
+		#{d_dlpoint,jdbcType=NUMERIC},
+		#{d_dlfrequency,jdbcType=NUMERIC}
+		)
+	</insert>
+<!-- 	文档查询下载界面的条件查询部分 -->
+	<select id="findDocument2" parameterType="Bean.DocSearchBean"
+		resultType="Bean.Document">
+		select * from FOUR_DOCUMENTS_TB  
+		<trim prefix="where" prefixOverrides="and">
+		   	<if test="d_point!=null"> and D_DLPOINT = #{d_point}</if>
+			<if test="d_type!=null"> and D_TYPE = #{d_type}</if>
+<!-- 			<if test="d_name!=null"> and D_NAME like '%${d_name}%'</if> -->
+			<if test="d_name!=null"> and D_NAME like #{d_name}</if>
+			<if test="d_user!=null"> and D_UP_USERID = #{d_user}</if>
+			<if test="(d_date1!=null)and(d_date2!=null)"> and D_DATE between  #{d_date1} and  #{d_date2}</if>
+		</trim>
+	</select>
+	
+<!-- 使用嵌套查询，当查出一条文档数据时，也关联查询出对应的用户信息 -->
+	<select id="findDocument" parameterType="Bean.DocSearchBean"
+		resultMap="userMap">
+		select * from FOUR_DOCUMENTS_TB
+		<trim prefix="where" prefixOverrides="and">
+		   	<if test="d_point!=null"> and D_DLPOINT = #{d_point}</if>
+			<if test="d_type!=null"> and D_TYPE = #{d_type}</if>
+<!-- 			<if test="d_name!=null"> and D_NAME like '%${d_name}%'</if> -->
+			<if test="d_name!=null"> and D_NAME like #{d_name}</if>
+			<if test="d_user!=null"> and D_UP_USERID = #{d_user}</if>
+			<if test="(d_date1!=null)and(d_date2!=null)"> and D_DATE between  #{d_date1} and  #{d_date2}</if>
+		</trim>  
+	</select>
+	
+	<select id="selectUser" parameterType="java.lang.Integer"
+		resultType="Bean.User">
+		select * from FOUR_USER_TB where USER_ID =#{id}
+	</select>
+
+	<resultMap type="Bean.Document" id="userMap">
+		<association property="user" column="D_UP_USERID"
+			javaType="Bean.User" select="selectUser">
+		</association>
+	</resultMap>
+<!-- 	文档查询下载界面的全部查询测试 -->	
+	<select id="findAllDocument" resultType="Bean.Document">
+		select * from FOUR_DOCUMENTS_TB
+	</select>
+</mapper>

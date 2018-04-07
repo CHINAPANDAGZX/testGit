@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- 接口插入 -->
+<mapper namespace="Dao.IUserDao">
+
+<!-- 	管理端用户查询管理界面的全部查询测试 -->	
+	<select id="findAllUser" resultType="Bean.User">
+		select * from FOUR_USER_TB
+	</select>
+<!-- 	管理端用户查询管理界面的全部查询测试 -->	
+	<update id="updateUserEnable" parameterType="Bean.User">
+		update FOUR_USER_TB set
+		USER_ENABLE=#{user_enable} where USER_ID=#{user_id}
+	</update>
+</mapper>

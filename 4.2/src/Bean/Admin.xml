@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="admin">
+	
+	<select id="findAdmin" parameterType="java.util.Map" resultType="Bean.Admin">
+		select * from FOUR_ADMIN_TB where 
+		A_NAME=#{name} and A_PSW =#{psw}
+	</select>
+
+</mapper>
+
+	

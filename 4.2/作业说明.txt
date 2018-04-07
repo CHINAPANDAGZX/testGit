@@ -1,0 +1,25 @@
+--1、查询用户的操作没记住，回来又给忘记了，还是去网上百度和请教同学才写出来了。
+--2、对ServletActionContext.getServletContext()理解不够，上网查询了一下，把昨天漏掉的这个坑填上。而且网上的资料显示，得到的路径会是webapps才对，但是		实际得到的路径是在.metadata\.plugins下，此处是部署的tomcat下，资料显示是在eclipse中自动配置目录，实际运行在tomcat中会是在webapps下。
+--3、在iframe中无法打开带有上传文件的页面，但是跳转可以（已解决，iframe跳转函数之前加入请求头未去除）
+--4、在图片标签中tags标签获取session作为图片地址失效问题（已解决，<s:if test="#session.user == null"></s:if>虽然能判断session是否为空，但是判断完之后session就会被清空）
+--5、跳转页面session取值出现问题（已解决，在action类中重复添加session，导致这个错误）
+--6、（非常重要，实践后才获得！）数据表多次查询问题（已解决，详细内容简化如下：）
+	注：整个查询完成之后文档类中记录用户id的属性值将为空，需要取用户的数据时需要到文档类中的用户类中去获取。
+	<select id="findDocument" parameterType="Bean.DocSearchBean"
+		resultMap="userMap">
+		select * from FOUR_DOCUMENTS_TB 
+	</select>
+	
+	<select id="selectUser" parameterType="java.lang.Integer"
+		resultType="Bean.User">
+		select * from FOUR_USER_TB where USER_ID =#{id}
+	</select>
+
+	<resultMap type="Bean.Document" id="userMap">
+		<association property="user" column="D_UP_USERID"/*此处user是文档类中的User对象变量，而D_UP_USERID是文档表中记录User对象的字段*/
+			javaType="Bean.User" select="selectUser">
+		</association>
+	</resultMap>
+--7、文件上传前在前端对文件的类型进行先行判断，符合要求才能提交的设想，暂未找到合适的方法(待解决)
+--8、下载文件不用a标签，而是使用按键点击下载的方式，用a标签的按键样式不理想（待解决）
+--9、AOP的增强处理嵌入到工程中可以运行，但是就无法登录成功，（待解决）

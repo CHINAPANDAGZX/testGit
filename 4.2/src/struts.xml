@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>	
+
+<!--	设置默认编码-->
+	<constant name="struts.i18n.encoding" value="utf-8"></constant>
+<!--	设置默认上传文件时临时文件存放文件夹-->
+	<constant name="struts.multipart.saveDir" value="c:\mytest\"></constant>
+	
+	
+	<package name="struts2" namespace="/" extends="struts-default,json-default">
+<!-- 		首页部分 -->
+		<action name="pageShift" class="org.great.action.UserAction" method="pageShift">
+			<result name="home">/home.jsp</result><!-- 		跳转到首页 -->
+			<result name="login">/login_User.jsp</result><!-- 		跳转到用户登录页面 -->
+			<result name="register">/register_Admin.jsp</result><!-- 		跳转到用户注册页面 -->
+			<result name="uploadtest">/upload_file.jsp</result><!-- 		跳转到用户上传文档页面 -->
+			<result name="admin_login">/login_Admin.jsp</result><!-- 		跳转到用户登录页面 -->
+			<result name="error">/error.jsp</result>
+		</action>
+		
+<!-- 		用户登录部分 -->
+		<action name="login" class="org.great.action.UserAction" method="login">
+			<result name="home">/home.jsp</result>
+			<result name="error">/error.jsp</result>
+            <result name="login">/login_Admin.jsp</result>
+<!--             <result name="register">/register_Admin.jsp</result> -->
+<!--             <result name="success">/success.jsp</result> -->
+            <result name="success">/jsp/houTai.jsp</result>
+            <result name="uploadtest" type="chain">
+            	<param name="namespace">/</param>
+            	<param name="actionName">pageShift</param>
+            	<param name="method">pageShift</param>
+            </result>
+		</action>
+<!-- 		管理员登录部分 -->
+		<action name="loginAdmin" class="org.great.action.AdminAction" method="login">
+			<result name="home">/home.jsp</result>
+			<result name="error">/error.jsp</result>
+            <result name="login">/login_Admin.jsp</result>
+<!--             <result name="register">/register_Admin.jsp</result> -->
+<!--             <result name="success">/success.jsp</result> -->
+            <result name="success">/jsp/AdminHouTai.jsp</result>
+            <result name="uploadtest" type="chain">
+            	<param name="namespace">/</param>
+            	<param name="actionName">pageShift</param>
+            	<param name="method">pageShift</param>
+            </result>
+		</action>
+<!-- 		注册部分 -->
+		<action name="registerAction" class="org.great.action.UserAction" method="register">
+			<result name="home">/home.jsp</result>
+			<result name="error">/error.jsp</result>
+            <result name="login">/login_Admin.jsp</result>
+<!--             <result name="register">/register_Admin.jsp</result> -->
+            <result name="success" type="chain">
+            	<param name="namespace">/</param>
+            	<param name="actionName">login</param>
+            	<param name="method">login</param>
+            </result>
+		</action>
+<!-- 		生成验证码部分 -->
+		<action name="createImage" class="org.great.action.CreateImgAction">
+			<!-- 		使用stream类型的result -->
+			<result name="success" type="stream">
+				<!-- 	输出指定的内容 -->
+				<param name="inputName">imageStream</param>
+			</result>
+		</action>
+<!-- 		验证用户名唯一性部分 -->	
+		<action name="checkName" class="org.great.action.CheckNameAction" method="check">
+		<!-- 		使用json类型的result把结果输出给回调函数 -->
+			<result name="success" type="json">
+				<param name="root">info</param>
+			</result>		
+		</action>
+<!-- 		启用禁用用户名部分 -->	
+		<action name="adminEnableUser" class="org.great.action.AdminAction" method="enableUser">
+		<!-- 		使用json类型的result把结果输出给回调函数 -->
+			<result name="success" type="json">
+				<param name="root">info</param>
+			</result>		
+		</action>
+<!-- 		拉取用户信息部分 -->	
+		<action name="getMyInfo" class="org.great.action.UserAction" method="myInfo">
+			<result name="success">/myInfo.jsp</result>		
+		</action>
+<!-- 		测试拉取数据部分 -->	
+		<action name="toCity" class="org.great.action.CityAction" >
+			<result name="success">/city.jsp</result>		
+		</action>
+<!-- 		查询文档部分 -->
+		<action name="docFind" class="org.great.action.DocAction" method="findDoc">
+			<result name="home">/home.jsp</result>
+			<result name="success" type="json">
+				<param name="root">resultList</param>
+			</result>
+       </action>
+<!-- 		查询用户部分 -->
+		<action name="userFind" class="org.great.action.AdminAction" method="findUser">
+			<result name="home">/home.jsp</result>
+			<result name="success" type="json">
+				<param name="root">resultList</param>
+			</result>
+       </action>
+       
+<!-- 		上传文档部分 -->
+		<action name="uploadAction" class="org.great.action.DocAction" method="upLoadDo">
+			<result name="home">/home.jsp</result>
+			<result name="error">/error.jsp</result>
+            <result name="login">/login_Admin.jsp</result>
+            <result name="success2">/success2.jsp</result>
+<!--	重定义fileUpload拦截器,fileUpload是固定	的	-->
+			<interceptor-ref name="fileUpload">
+<!--				maximumSize:固定参数，409600：以字节为单位，409600表示400k，指每一个文件的最大值，而不是指所有文件的总大小-->
+				<param name="maximumSize">409600</param>
+<!--				allowedTypes:固定参数  application/vnd.ms-powerpointt：ppt文件类型，从tomcat的安装目录下的conf\web里定义了所有的文件类型-->
+				<param name="allowedTypes">image/jpeg</param> 
+			</interceptor-ref>
+<!--	一个action中有配置拦截器，就必须手动加载默认拦截器		-->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+<!--	文件下载	-->
+		<action name="download" class="org.great.action.DownloadAction">
+<!--	stream:参考Referenced Libraries/struts2-core-2.0.11.1.jar/struts-default.xml,stream专门用来文件下载-->	
+			<result name="success" type="stream">
+<!--配置的三个参数参考	Referenced Libraries/struts2-core-2.0.11.1.jar/org.apache.struts2.dispatcher/StreamResult.class		-->
+				<param name="contentType">image/jpeg</param>
+<!--		下载后生成的文件名		-->
+				<param name="contentDisposition">attachment;filename=${fname}</param>
+<!--			定义了调用action中的哪个方法，方法名为：getDownloadFile(),所以这儿用downloadFile（去掉get，将D改为d）	-->
+				<param name="inputName">downloadFile</param>
+			</result>
+		</action>
+	
+	</package>
+	
+<package name="strutsFile" extends="struts-default">
+		<action name="upload" class="org.great.action.UserAction" method="upFile()">
+			<result name="result">/success.jsp</result>
+			<result name="input">/index.jsp</result>
+<!--	重定义fileUpload拦截器,fileUpload是固定	的	-->
+			<interceptor-ref name="fileUpload">
+<!--				maximumSize:固定参数，409600：以字节为单位，409600表示400k，指每一个文件的最大值，而不是指所有文件的总大小-->
+				<param name="maximumSize">409600</param>
+<!--				allowedTypes:固定参数  application/vnd.ms-powerpointt：ppt文件类型，从tomcat的安装目录下的conf\web里定义了所有的文件类型-->
+				<param name="allowedTypes">image/jpeg</param> 
+			</interceptor-ref>
+<!--	一个action中有配置拦截器，就必须手动加载默认拦截器		-->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+		
+		
+		
+<!--	文件下载	-->
+		<action name="download" class="org.great.action.DownloadAction">
+<!--	stream:参考Referenced Libraries/struts2-core-2.0.11.1.jar/struts-default.xml,stream专门用来文件下载-->	
+			<result name="success" type="stream">
+<!--配置的三个参数参考	Referenced Libraries/struts2-core-2.0.11.1.jar/org.apache.struts2.dispatcher/StreamResult.class		-->
+				<param name="contentType">image/jpeg</param>
+<!--		下载后生成的文件名		-->
+				<param name="contentDisposition">attachment;filename=${fname}</param>
+<!--			定义了调用action中的哪个方法，方法名为：getDownloadFile(),所以这儿用downloadFile（去掉get，将D改为d）	-->
+				<param name="inputName">downloadFile</param>
+			</result>
+		</action>
+</package>	
+<!-- 自己重写的上传下载 -->
+<package name="strutsFile2" extends="struts-default">
+		<action name="upload2" class="org.great.action.DocAction" method="upFile2">
+			<result name="result">/success.jsp</result>
+			<result name="input">/index.jsp</result>
+<!--	重定义fileUpload拦截器,fileUpload是固定	的	-->
+			<interceptor-ref name="fileUpload">
+<!--				maximumSize:固定参数，409600：以字节为单位，409600表示400k，指每一个文件的最大值，而不是指所有文件的总大小-->
+				<param name="maximumSize">409600</param>
+<!--				allowedTypes:固定参数  application/vnd.ms-powerpointt：ppt文件类型，从tomcat的安装目录下的conf\web里定义了所有的文件类型-->
+				<param name="allowedTypes">image/jpeg</param> 
+			</interceptor-ref>
+<!--	一个action中有配置拦截器，就必须手动加载默认拦截器		-->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+</package>	
+	
+</struts>
