@@ -31,7 +31,8 @@ public class AdminAction extends BaseAction {
 	private String userImage;
 	private Admin admin;
 	private User user;  //管理员操作的用户
-	private String operationUserResult;//管理员操作的用户结果字符串----------------------------------------写到这里
+	private boolean operationUserResult;//管理员操作的用户结果字符串----------------------------------------写到这里
+	
 	
 	private String resultList;//查询用户结果列表
 	private String req;// 用于保存页面跳转请求变量
@@ -85,17 +86,21 @@ public class AdminAction extends BaseAction {
 			MyEmpUnitl meu = ctx.getBean("myEmpUnitl", MyEmpUnitl.class);
 //			MyEmpUnitl meu = new MyEmpUnitl();
 			Admin adminNew = meu.loginAdmin(admin.getA_name(), admin.getA_psw());
-			System.out.println(adminNew);
+//			System.out.println(adminNew);
 			//((AbstractApplicationContext) conf).close();//Destroy 
-			//((AbstractApplicationContext) ctx).close();//Destroy 
+			
 //			User admin = MyEmpUnitl.loginEmp(user.getUser_name(), user.getUser_psw());
-			System.out.println(adminNew != null);
-			System.out.println(adminNew);
+//			System.out.println(adminNew != null);
+//			System.out.println(adminNew);
 			if (adminNew != null) {
 //				userImage = admin.getUser_avatarURL();//配置用户头像
 				session.put("admin", adminNew);
 				f = "success";
+				Admin admin2 = (Admin) ServletActionContext.getRequest().getSession().getAttribute("admin");
+				System.out.println("动作类登录的管理员名称："+admin.getA_name());
+	            System.out.println("动作类登录的管理员密码："+admin.getA_psw());
 			}
+			((AbstractApplicationContext) ctx).close();//Destroy 
 		}else{
 			f="error";
 		}
@@ -119,12 +124,17 @@ public class AdminAction extends BaseAction {
 	
 	//管理员禁用启用用户函数
 	public String enableUser(){
-		boolean flag = false;
+		operationUserResult = false;
 		System.out.println("进入用户启用禁用函数");
-		
-		admin.setUser_enable(1);
-		int r = meu.enableUser(admin);
+//		user.setUser_enable(1);
+		ApplicationContext conf = new ClassPathXmlApplicationContext("applicationContext.xml");
+		MyEmpUnitl meu = conf.getBean("myEmpUnitl", MyEmpUnitl.class);
+		int r = meu.enableUser(user);
 		System.out.println("启用用户更新值：" + r);
+		((AbstractApplicationContext) conf).close();//Destroy 
+		if(r==1){
+			operationUserResult = true;
+		}
 		return "success";
 	}
 	
@@ -353,13 +363,15 @@ public class AdminAction extends BaseAction {
 		this.user = user;
 	}
 
-	public String getOperationUserResult() {
+	public boolean isOperationUserResult() {
 		return operationUserResult;
 	}
 
-	public void setOperationUserResult(String operationUserResult) {
+	public void setOperationUserResult(boolean operationUserResult) {
 		this.operationUserResult = operationUserResult;
 	}
+
+	
 	
 	
 }

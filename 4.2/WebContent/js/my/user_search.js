@@ -81,6 +81,7 @@ function search() {
 //							myDelete(this);
 							
 						}
+						//启用禁用按钮
 						var btnb1 = document.createElement("input");
 						btnb1.type = "button";
 						btnb1.id = "button1"+i;
@@ -201,7 +202,7 @@ function getApplyID(buttonID,cardList){
 	var tdNode=$(buttonID).parent();
 	var trNode=tdNode.parent();
 	var idd=trNode.children().eq(0).html();
-	var idd2=trNode.children().eq(4).html();
+	var idd2=trNode.children().eq(6).html();
 	var i = idd - 1;
 //	//获取点击的申请序号
 //	var applyID = cardList[i].applyID;
@@ -253,32 +254,33 @@ function changeEmpApply(buttonID,cardList){
 //提交人员启用禁用修改申请
 function changeEmpEnableApply(buttonID,cardList){
 	var i = getApplyID(buttonID,cardList)[0];
-	var changeEmp_ID = cardList[i].emp_ID;
-	var changeEmp_Enable = getApplyID(buttonID,cardList)[1];
-	var newApplyVerifyPerson = applyVerifyPersonID;
-//	alert("当前changeEmp_Enable："+changeEmp_Enable);
-	if(changeEmp_Enable=="启用"){
-		changeEmp_Enable=0;
+	alert("选择了第："+i);
+	var changeUser_ID = cardList[i].user_id;
+	var changeUser_Name = cardList[i].user_name;
+	var changeUser_Enable = getApplyID(buttonID,cardList)[1];
+//	var newApplyVerifyPerson = applyVerifyPersonID;
+	alert("当前要操作的用户情况：用户id："+changeUser_ID+",用户名称："+changeUser_Name+",用户启用情况："+changeUser_Enable);
+	if(changeUser_Enable=="启用"){
+		changeUser_Enable=0;
 	}else{
-		changeEmp_Enable=1;
+		changeUser_Enable=1;
 	}
-//	alert("当后changeEmp_Enable："+changeEmp_Enable);
 
 	$.ajax({
 		type:"POST",
 //		url:"",
-		url:"4.2/adminEnableUser?action=changeEmpEnableApply",
-		data:"changeEmp_ID=" + changeEmp_ID + 
-			 "&changeEmp_Enable=" + changeEmp_Enable + 
-			 "&newApplyVerifyPerson=" + newApplyVerifyPerson,
+		url:"4.2/adminEnableUser.action",
+		data:"user.user_id=" + changeUser_ID + 
+			 "&user.user_enable=" + changeUser_Enable,
 		dataType:"text",
 		async:true,	
 		success: function(msg){
-			if(msg == "true\r\n") {
+			var flag = jQuery.parseJSON(msg);
+			if(flag == true) {
 		        //result就是servlet返回的数据
 		        alert("提交修改成功");
 		        search();
-		    }else if(msg == "false\r\n") {
+		    }else if(flag == false) {
 		        //result就是servlet返回的数据
 		        alert("提交修改失败");
 		    }

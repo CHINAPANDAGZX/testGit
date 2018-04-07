@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -19,8 +20,12 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+
+import Bean.Admin;
 
 
 /**
@@ -31,7 +36,8 @@ import org.springframework.stereotype.Component;
 @Aspect 		//自动代理，从配置文件获得
 @Component				//用于注入，IOC反向控制生成类
 public class SystemLogAspect {
-
+//	@Autowired  
+//	private  HttpServletRequest request; 
     //注入Service用于把日志保存数据库  
 //    @Resource  //这里我用resource注解
 //    private SystemLogService systemLogService;  
@@ -67,17 +73,23 @@ public class SystemLogAspect {
      * @param joinPoint 切点 
      */  
     @After("controllerAspect()")  
-    public  void after(JoinPoint joinPoint) throws Throwable{  
-  
-       /* HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();  
-        HttpSession session = request.getSession();  */
-        //读取session中的用户  
-       // User user = (User) session.getAttribute("user");  
-        //请求的IP  
-        //String ip = request.getRemoteAddr();
+    public  void after(JoinPoint joinPoint) throws Throwable{
+    	
+//    	Admin admin = (Admin) ServletActionContext.getRequest().getSession().getAttribute("admin");
+//    	HttpServletRequest request = (HttpServletRequest) (RequestContextHolder.getRequestAttributes());
+//		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+//				.getRequest();
+//    	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+//		HttpSession session = request.getSession();
+		// 读取session中的用户
+//		Admin admin = (Admin) session.getAttribute("admin");
+//		 请求的IP
+//		String ip = request.getRemoteAddr();
         
          try {  
-            
+//            System.out.println("登录的管理员名称："+admin.getA_name());
+//            System.out.println("登录的管理员密码："+admin.getA_psw());
+//            System.out.println("登录的管理员IP："+ip);
             String targetName = joinPoint.getTarget().getClass().getName();  
             String methodName = joinPoint.getSignature().getName();  
             Object[] arguments = joinPoint.getArgs();  

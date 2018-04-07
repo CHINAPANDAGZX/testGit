@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- 接口插入 -->
+<mapper namespace="Dao.IEmpDao">
+	<!-- 保存一条员工数据 -->
+	<insert id="registerUser" parameterType="Bean.User" >
+		<selectKey keyProperty="user_id" order="BEFORE" resultType="java.lang.Integer">
+			select Four_User_TB_seq.nextval from dual
+		</selectKey>
+<!-- 		insert into FOUR_USER_TB( -->
+<!-- 		USER_ID,USER_NAME,USER_PSW,USER_POINT,USER_GRADE,USER_AVATARURL,USER_TYPE,USER_SEX,USER_EDUCATION,USER_CAREER,USER_PHONE,USER_EMAIL -->
+<!-- 		)  -->
+<!-- 		values( -->
+<!-- 		#{user_id},#{user_name},#{user_psw},#{user_point},#{user_grade},#{user_avatarURL},#{user_type},#{user_sex},#{user_education},#{user_career},#{user_phone},#{user_Email} -->
+<!-- 		) -->
+
+		insert into FOUR_USER_TB values(
+		#{user_id},
+		#{user_name,jdbcType=VARCHAR},
+		#{user_psw,jdbcType=VARCHAR},
+		#{user_point,jdbcType=NUMERIC},
+		#{user_grade,jdbcType=VARCHAR},
+		#{user_avatarURL,jdbcType=VARCHAR},
+		#{user_type,jdbcType=VARCHAR},
+		#{user_sex,jdbcType=VARCHAR},
+		#{user_education,jdbcType=VARCHAR},
+		#{user_career,jdbcType=VARCHAR},
+		#{user_phone,jdbcType=VARCHAR},
+		#{user_Email,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

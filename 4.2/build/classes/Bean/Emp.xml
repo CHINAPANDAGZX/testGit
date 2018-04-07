@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" 
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="emp">
+
+	<insert id="addDept" parameterType="Bean.Emp" >
+		insert into
+		TC_EMP(EMP_ID,EMP_NAME,EMP_PSW) values(#{emp_id},#{emp_name},#{emp_psw})
+	</insert>
+ 
+ 
+	<delete id="deleteById"  parameterType="java.util.Map" >
+		delete from TC_EMP where
+		EMP_NAME=#{did} or EMP_NAME =#{did2}
+	</delete>
+
+	<select id="findUser" parameterType="java.util.Map" resultType="Bean.User">
+		select * from FOUR_USER_TB where 
+		USER_NAME=#{name} and USER_PSW =#{psw}
+	</select>
+	
+	<select id="findUserByName" parameterType="String" resultType="Bean.User">
+		select * from FOUR_USER_TB where 
+		USER_NAME=#{emp_Name}
+	</select>
+	
+<!-- 	<select id="findAdmin" parameterType="java.util.Map" resultType="Bean.Admin"> -->
+<!-- 		select * from FOUR_USER_TB where  -->
+<!-- 		USER_NAME=#{name} and USER_PSW =#{psw} -->
+<!-- 	</select> -->
+
+</mapper>
+
+	

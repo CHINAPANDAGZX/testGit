@@ -71,7 +71,7 @@ public class UserAction extends BaseAction {
 		String verifyCode2 = (String) session.get("imageCode");
 		verifyCode = verifyCode.toUpperCase();
 		if (verifyCode2.equals(verifyCode)) {
-			ApplicationContext conf = new ClassPathXmlApplicationContext(s);
+			ApplicationContext conf = new ClassPathXmlApplicationContext("applicationContext.xml");
 			MyEmpUnitl meu = conf.getBean("myEmpUnitl", MyEmpUnitl.class);
 //			MyEmpUnitl meu = new MyEmpUnitl();
 			User admin = meu.loginEmp(user.getUser_name(), user.getUser_psw());
