@@ -2,6 +2,7 @@ package MyUnitl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.great.aoplog.Log;
@@ -25,14 +26,14 @@ import Dao.IUserDao;
 * @since  
 * @return  
 */
-@Service
-//@Controller
+//@Service
+////@Controller
 @Component("myEmpUnitl")
 public class MyEmpUnitl {
 	
 	// 管理员登录部分
 	@Log(operationType = "登录操作", operationName = "管理员登录")
-	public Admin loginAdmin(String userName, String password) {
+	public Admin loginAdmin(String userName, String password,Map session) {
 		System.out.println("进入管理员用户名和密码验证函数");
 		Admin admin = null;
 		if (userName.equals("tologin")) {
@@ -46,6 +47,7 @@ public class MyEmpUnitl {
 			admin = sessoin.selectOne("findAdmin", map);
 			System.out.println(admin);
 			System.out.println(admin.getA_name());
+			session.put("admin", admin);
 		}
 		System.out.println(admin);
 		return admin;

@@ -10,9 +10,13 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
+import org.great.aoplog.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
@@ -22,6 +26,9 @@ import Bean.User;
 import MyUnitl.MyDocUnitl;
 import MyUnitl.MyEmpUnitl;
 
+//@Service
+@Controller
+@Component("adminAction")
 public class AdminAction extends BaseAction {
 	/**
 	 * 
@@ -73,6 +80,7 @@ public class AdminAction extends BaseAction {
 	}
 
 	// 登录部分函数
+//	@Log(operationType = "登录操作", operationName = "管理员登录")
 	public String login() {
 		System.out.println("进入管理员登录");
 		String f = "error";
@@ -85,7 +93,7 @@ public class AdminAction extends BaseAction {
 //			MyEmpUnitl meu = conf.getBean("myEmpUnitl", MyEmpUnitl.class);
 			MyEmpUnitl meu = ctx.getBean("myEmpUnitl", MyEmpUnitl.class);
 //			MyEmpUnitl meu = new MyEmpUnitl();
-			Admin adminNew = meu.loginAdmin(admin.getA_name(), admin.getA_psw());
+			Admin adminNew = meu.loginAdmin(admin.getA_name(), admin.getA_psw(),session);
 //			System.out.println(adminNew);
 			//((AbstractApplicationContext) conf).close();//Destroy 
 			
@@ -94,7 +102,7 @@ public class AdminAction extends BaseAction {
 //			System.out.println(adminNew);
 			if (adminNew != null) {
 //				userImage = admin.getUser_avatarURL();//配置用户头像
-				session.put("admin", adminNew);
+//				session.put("admin", adminNew);
 				f = "success";
 				Admin admin2 = (Admin) ServletActionContext.getRequest().getSession().getAttribute("admin");
 				System.out.println("动作类登录的管理员名称："+admin.getA_name());

@@ -3,6 +3,7 @@ package org.great.aoplog;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
+
+import com.opensymphony.xwork2.ActionContext;
 
 import Bean.Admin;
 
@@ -50,6 +53,7 @@ public class SystemLogAspect {
 	//第一个星代表包上层的包，第二个..*代表包下面不论多少层的类,第三个*(..)第二个条件中的任意方法任意参数
 //    @Pointcut("execution (* org.great.aoplog..*.*(..))")  
     @Pointcut("execution (* MyUnitl..*.*(..))")  
+//    @Pointcut("execution (* org.great.action..*.*(..))")  
     public  void controllerAspect() {  
     }  
     
@@ -85,10 +89,14 @@ public class SystemLogAspect {
 //		Admin admin = (Admin) session.getAttribute("admin");
 //		 请求的IP
 //		String ip = request.getRemoteAddr();
-        
+    	ActionContext context = ActionContext.getContext(); 
+		Map request = (Map) context.get("request"); 
+		Map session = context.getSession(); 
+		// 读取session中的用户
+		Admin admin = (Admin) session.get("admin");
          try {  
-//            System.out.println("登录的管理员名称："+admin.getA_name());
-//            System.out.println("登录的管理员密码："+admin.getA_psw());
+            System.out.println("登录的管理员名称："+admin.getA_name());
+            System.out.println("登录的管理员密码："+admin.getA_psw());
 //            System.out.println("登录的管理员IP："+ip);
             String targetName = joinPoint.getTarget().getClass().getName();  
             String methodName = joinPoint.getSignature().getName();  
