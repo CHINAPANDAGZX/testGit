@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="org.great.dao.UserMapper">
+	<select id="login" parameterType="org.great.entity.Users"
+		resultType="org.great.entity.Users">
+			select * from USERS where LOGINNAME =#{loginname} and  PWD=#{pwd}
+		
+		</select>
+	<select id="loginUser" parameterType="org.great.entity.User"
+		resultType="org.great.entity.User">
+			select * from FOUR_USER_TB where USER_NAME =#{user_name} and  USER_PSW=#{user_psw}
+		
+		</select>
+</mapper>
